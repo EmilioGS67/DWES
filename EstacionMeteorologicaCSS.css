@@ -1,0 +1,23 @@
+body {
+   background-color:blanchedalmond; 
+   font-family: Rockwell;
+   font-size: 23px;
+}
+
+h1 {
+    font-family: Magneto;
+    text-align: center;
+}
+
+h3 {
+    font-family: Magneto;
+}
+
+a {
+    font-size: 16px;
+    text-align: center;
+}
+
+p {
+    text-align: center;
+}
