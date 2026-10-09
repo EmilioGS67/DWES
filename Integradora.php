@@ -9,13 +9,15 @@
     <h1>Ejercicio integradora</h1>
 </body>
 <?php
+error_reporting(0);
+
 $numero = 2;
 $resultado = 1 / $numero;
 print "<p>Resultado: $resultado</p>";
 print "Sumar 2 valores <br>";
 
 $a = 0;
-$b = 2;
+//$b = 2;
 
 $a=$b+5;
 print "El resultado de la suma es: $a";
