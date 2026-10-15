@@ -2,8 +2,8 @@
 
 $mensajeUrl = '';
 $mensajeIp  = '';
-$url        = '';
-$ip         = '';
+$url = '';
+$ip  = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
