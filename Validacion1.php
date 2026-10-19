@@ -21,16 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Validación A1</title>
+    <title>Validación 1</title>
 </head>
 <body>
 
-    <h1>A1. Validar un email</h1>
+    <h1>Validar un email</h1>
 
     <form action="" method="POST">
         <label for="email">Email:</label>
         
-        <input type="text" id="email" name="email" value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>">
+        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>">
         <br><br>
 
         <button type="submit">Validar</button>

@@ -30,11 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edad'])) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Validación A2</title>
+    <title>Validación 2</title>
 </head>
 <body>
 
-    <h1>A2. Validar una edad (18-99)</h1>
+    <h1>Validar una edad (18-99)</h1>
 
     <form action="" method="POST">
         <label for="edad">Edad:</label>
@@ -53,8 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edad'])) {
         echo "<p>Introduce una edad para validarla.</p>";
     }
     ?>
-
-    <p>Pruebas sugeridas: 17 (no), 18 (sí), 99 (sí), 100 (no), 25.5 (no), abc (no), 018 (no).</p>
 
 </body>
 </html>

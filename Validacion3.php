@@ -41,11 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Validación A3</title>
+    <title>Validación 3</title>
 </head>
 <body>
 
-    <h1>A3. Validar URL e IP</h1>
+    <h1>Validar URL e IP</h1>
 
     <form action="" method="POST">
         <label for="url">URL:</label>
@@ -69,9 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<p>Rellena los dos campos y pulsa Validar.</p>";
     }
     ?>
-
-    <p>Pruebas sugeridas: https://www.ejemplo.es (sí), www.ejemplo.es (no), ftp://ejemplo.es (no por esquema),
-       192.168.1.1 (sí), 256.1.1.1 (no), ::1 (sí, IPv6), 2001:db8::ff00:42:8329 (sí, IPv6).</p>
 
 </body>
 </html>
