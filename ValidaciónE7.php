@@ -1,11 +1,8 @@
 <?php
 
-// E7. Batería de pruebas (tests.php)
-// Prueba validarDNI, validarTelefono y validarCP (definidas en funciones.php, misma carpeta).
-
 require_once __DIR__ . '/funciones.php';
 
-// Cada caso: [valor, resultado esperado, descripción]
+// Cada caso
 $casos = [
 
     'validarDNI' => [
@@ -59,13 +56,13 @@ $fallos = 0;
     <meta charset="UTF-8">
     <title>Validación E7</title>
     <style>
-        .ok    { color: #0a7a28; font-weight: bold; }
+        .ok { color: #0a7a28; font-weight: bold; }
         .fallo { color: #b00020; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h1>E7. Batería de pruebas</h1>
+    <h1>Batería de pruebas</h1>
 
     <?php foreach ($casos as $funcion => $lista) { ?>
 

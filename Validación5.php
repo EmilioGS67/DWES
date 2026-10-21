@@ -1,7 +1,7 @@
 <?php
 
 $comentario = '';
-$seguro     = '';
+$seguro = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comentario']) && is_string($_POST['comentario'])) {
 

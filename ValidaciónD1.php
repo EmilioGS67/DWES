@@ -134,17 +134,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $bd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 $bd->exec("CREATE TABLE IF NOT EXISTS usuarios (
-                              id INTEGER PRIMARY KEY AUTOINCREMENT,
-                              nombre TEXT NOT NULL,
-                              email TEXT NOT NULL UNIQUE,
-                              telefono TEXT NOT NULL,
-                              dni TEXT NOT NULL,
-                              cp TEXT NOT NULL,
-                              fecha_nacimiento TEXT NOT NULL,
-                              password_hash TEXT NOT NULL)");
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nombre TEXT NOT NULL,
+                    email TEXT NOT NULL UNIQUE,
+                    telefono TEXT NOT NULL,
+                    dni TEXT NOT NULL,
+                    cp TEXT NOT NULL,
+                    fecha_nacimiento TEXT NOT NULL,
+                    password_hash TEXT NOT NULL)");
 
                 $consulta = $bd->prepare("INSERT INTO usuarios (nombre, email, telefono, dni, cp, fecha_nacimiento, password_hash)
-                                          VALUES (:nombre, :email, :telefono, :dni, :cp, :fecha, :hash)");
+                    VALUES (:nombre, :email, :telefono, :dni, :cp, :fecha, :hash)");
                 $consulta->execute([
                     ':nombre' => $valores['nombre'],
                     ':email' => $valores['email'],

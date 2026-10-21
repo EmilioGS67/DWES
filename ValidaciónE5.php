@@ -1,18 +1,5 @@
 <?php
 
-// E5. Mini librería de validación (validador.php)
-// validar(array $datos, array $reglas): array  ->  devuelve los errores encontrados.
-//
-// Reglas disponibles:
-//   requerido           el campo no puede estar vacío
-//   email               email válido
-//   nombre              nombre propio (2-40 letras, espacios, guiones y apóstrofos)
-//   entero:min:max      entero entre min y max (ambos opcionales: entero, entero:18, entero:18:99)
-//   telefono            teléfono español (regla añadida)
-//   url                 URL http o https (regla añadida)
-//
-// Los campos que NO son requeridos y vienen vacíos se consideran correctos (se saltan el resto de reglas).
-
 function validar(array $datos, array $reglas): array
 {
     $errores = [];
@@ -21,7 +8,7 @@ function validar(array $datos, array $reglas): array
 
         $valor = $datos[$campo] ?? '';
 
-        // Si llega un array u otro tipo (p. ej. nombre[]=a), no es un valor válido
+        // Si llega un array u otro tipo
         if (!is_string($valor)) {
             $errores[$campo] = "El campo $campo no es válido.";
             continue;
@@ -29,20 +16,20 @@ function validar(array $datos, array $reglas): array
 
         $valor = trim($valor);
 
-        // ¿Es obligatorio?
+        // Comprueba si es obligatorio
         if (in_array('requerido', $listaReglas, true) && $valor === '') {
             $errores[$campo] = "El campo $campo es obligatorio.";
             continue;
         }
 
-        // Campo opcional vacío: no hay nada que validar
+        // Campo opcional vacío
         if ($valor === '') {
             continue;
         }
 
         foreach ($listaReglas as $regla) {
 
-            // "entero:18:99" -> nombre = "entero", parámetros = ["18", "99"]
+           
             $partes = explode(':', $regla);
             $nombreRegla = array_shift($partes);
 
@@ -100,11 +87,10 @@ function validar(array $datos, array $reglas): array
                     break;
 
                 default:
-                    // Error del programador, no del usuario: mejor avisar que ignorarlo en silencio
+                    
                     throw new InvalidArgumentException("Regla de validación desconocida: $nombreRegla");
             }
 
-            // Un solo error por campo: nos quedamos con el primero que falle
             if (isset($errores[$campo])) {
                 break;
             }
@@ -114,19 +100,17 @@ function validar(array $datos, array $reglas): array
     return $errores;
 }
 
-// ---------- Demostración ----------
-
 function e(string $texto): string
 {
     return htmlspecialchars($texto, ENT_QUOTES, 'UTF-8');
 }
 
 $reglas = [
-    'nombre'   => ['requerido', 'nombre'],
-    'email'    => ['requerido', 'email'],
-    'edad'     => ['requerido', 'entero:18:99'],
-    'telefono' => ['telefono'],   // opcional
-    'web'      => ['url']         // opcional
+    'nombre' => ['requerido', 'nombre'],
+    'email' => ['requerido', 'email'],
+    'edad' => ['requerido', 'entero:18:99'],
+    'telefono' => ['telefono'],  
+    'web' => ['url']       
 ];
 
 $etiquetas = ['nombre' => 'Nombre', 'email' => 'Email', 'edad' => 'Edad', 'telefono' => 'Teléfono (opcional)', 'web' => 'Web (opcional)'];
@@ -154,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-    <h1>E5. Mini librería de validación</h1>
+    <h1>Mini librería de validación</h1>
 
     <form action="" method="POST">
         <?php foreach ($reglas as $campo => $r) { ?>

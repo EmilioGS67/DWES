@@ -1,8 +1,5 @@
 <?php
 
-// E4. Registro seguro (registro.php)
-// Los usuarios se guardan en una base de datos SQLite (archivo usuarios.sqlite) con PDO.
-
 function e(string $texto): string
 {
     return htmlspecialchars($texto, ENT_QUOTES, 'UTF-8');
@@ -13,7 +10,6 @@ function conectar(): PDO
     $bd = new PDO('sqlite:' . __DIR__ . '/usuarios.sqlite');
     $bd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // COLLATE NOCASE: "Ana" y "ana" se consideran el mismo usuario
     $bd->exec("CREATE TABLE IF NOT EXISTS usuarios (
                   id INTEGER PRIMARY KEY AUTOINCREMENT,
                   usuario TEXT NOT NULL UNIQUE COLLATE NOCASE,
@@ -31,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario  = isset($_POST['usuario'])  && is_string($_POST['usuario'])  ? trim($_POST['usuario']) : '';
     $password = isset($_POST['password']) && is_string($_POST['password']) ? $_POST['password']      : '';
 
-    // Usuario: 4 a 15 caracteres alfanuméricos o guion bajo
+    // Usuario: 4 a 15 caracteres alfanuméricos o guión bajo
     if ($usuario === '') {
         $errores[] = "El usuario es obligatorio.";
     } else if (preg_match('/^[A-Za-z0-9_]{4,15}$/D', $usuario) !== 1) {
@@ -60,14 +56,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $bd = conectar();
 
-            // Consulta preparada: ¿existe ya el usuario?
+            // Consulta preparada
             $consulta = $bd->prepare("SELECT COUNT(*) FROM usuarios WHERE usuario = :usuario");
             $consulta->execute([':usuario' => $usuario]);
 
             if ((int) $consulta->fetchColumn() > 0) {
                 $errores[] = "Ese nombre de usuario ya está en uso.";
             } else {
-                // La contraseña NUNCA se guarda en claro: password_hash genera un hash con sal incluida
+                // La contraseña nunca se guarda en claro
                 $insertar = $bd->prepare("INSERT INTO usuarios (usuario, password_hash) VALUES (:usuario, :hash)");
                 $insertar->execute([
                     ':usuario' => $usuario,
@@ -88,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Validación E4 - Registro</title>
+    <title>Registro</title>
 </head>
 <body>
 

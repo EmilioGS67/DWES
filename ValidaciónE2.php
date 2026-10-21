@@ -1,9 +1,5 @@
 <?php
 
-// E2. Calculadora de IVA (iva.php)
-// Campos: precio y tipo de IVA (4, 10 o 21).
-
-// Tipos de IVA permitidos (como texto, porque $_POST siempre devuelve cadenas)
 $tiposIva = ['4', '10', '21'];
 
 function e(string $texto): string
@@ -11,9 +7,9 @@ function e(string $texto): string
     return htmlspecialchars($texto, ENT_QUOTES, 'UTF-8');
 }
 
-$errores   = [];
+$errores = [];
 $precioTxt = '';
-$iva       = '';
+$iva = '';
 $resultado = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -21,14 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $precioTxt = isset($_POST['precio']) && is_string($_POST['precio']) ? trim($_POST['precio']) : '';
     $iva       = isset($_POST['iva'])    && is_string($_POST['iva'])    ? trim($_POST['iva'])    : '';
 
-    // ---- Precio ----
-    // Formato admitido: números con, como máximo, 2 decimales separados por coma o punto
     if ($precioTxt === '') {
         $errores['precio'] = "El precio es obligatorio.";
     } else if (preg_match('/^[0-9]+([.,][0-9]{1,2})?$/D', $precioTxt) !== 1) {
         $errores['precio'] = "El precio debe ser un número positivo con un máximo de 2 decimales (19,99 o 19.99).";
     } else {
-        // Cambiamos la coma por punto para que PHP lo entienda como decimal
+        
         $precio = (float) str_replace(',', '.', $precioTxt);
 
         if ($precio <= 0) {
@@ -36,14 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // ---- Tipo de IVA ----
+    // Tipo de IVA
     if ($iva === '') {
         $errores['iva'] = "Selecciona un tipo de IVA.";
     } else if (!in_array($iva, $tiposIva, true)) {
         $errores['iva'] = "El tipo de IVA no es válido.";
     }
 
-    // ---- Cálculo ----
+    // Cálculo
     if (count($errores) === 0) {
         $base  = $precio;
         $cuota = round($base * ((int) $iva) / 100, 2);

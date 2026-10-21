@@ -1,8 +1,5 @@
 <?php
 
-// E3. Comprobador de documentos (documentos.php)
-// Las funciones de validación están en funciones.php (debe estar en la misma carpeta).
-
 require_once __DIR__ . '/funciones.php';
 
 function e(string $texto): string
@@ -10,7 +7,7 @@ function e(string $texto): string
     return htmlspecialchars($texto, ENT_QUOTES, 'UTF-8');
 }
 
-// Campo del formulario => [etiqueta, función de validación]
+// Campo del formulario 
 $campos = [
     'dni'       => ['DNI',           'validarDNI'],
     'telefono'  => ['Teléfono',      'validarTelefono'],

@@ -1,8 +1,5 @@
 <?php
 
-// E4. Login seguro (login.php)
-// Usa la misma base de datos SQLite que "Validación E4 registro.php".
-
 session_start();
 
 function e(string $texto): string
@@ -16,14 +13,14 @@ function conectar(): PDO
     $bd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $bd->exec("CREATE TABLE IF NOT EXISTS usuarios (
-                  id INTEGER PRIMARY KEY AUTOINCREMENT,
-                  usuario TEXT NOT NULL UNIQUE COLLATE NOCASE,
-                  password_hash TEXT NOT NULL)");
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario TEXT NOT NULL UNIQUE COLLATE NOCASE,
+        password_hash TEXT NOT NULL)");
 
     return $bd;
 }
 
-// Mensaje único para cualquier fallo de acceso (ver la pregunta de reflexión más abajo)
+// Mensaje para cualquier fallo de acceso
 $mensajeError = "Usuario o contraseña incorrectos";
 
 $error   = '';
@@ -46,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['entrar'])) {
     if ($usuario === '' || $password === '') {
         $error = $mensajeError;
     } else if (preg_match('/^[A-Za-z0-9_]{4,15}$/D', $usuario) !== 1) {
-        // Un usuario con formato imposible no puede existir: mismo mensaje genérico
+        // Un usuario con formato imposible no puede existir
         $error = $mensajeError;
     } else {
         try {
@@ -80,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['entrar'])) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Validación E4 - Login</title>
+    <title>Login</title>
 </head>
 <body>
 
@@ -117,8 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['entrar'])) {
     <hr>
 
     <h2>Pregunta de reflexión</h2>
-    <p><strong>¿Por qué el login debe responder siempre «Usuario o contraseña incorrectos» en lugar de decir cuál de los dos falla?</strong></p>
-    <p>Porque si la aplicación dijera «ese usuario no existe» o «la contraseña es incorrecta», un atacante podría
+    <p><strong>¿Por qué el login debe responder siempre "Usuario o contraseña incorrectos" en lugar de decir cuál de los dos falla?</strong></p>
+    <p>Porque si la aplicación dijera "ese usuario no existe" o "la contraseña es incorrecta", un atacante podría
        <em>enumerar usuarios</em>: probar nombres hasta encontrar los que existen. Una vez tiene una lista de usuarios válidos,
        puede concentrar ataques de fuerza bruta, de relleno de credenciales (credential stuffing) o de phishing solo sobre
        cuentas reales, lo que le ahorra mucho trabajo. Con un mensaje único (y un tiempo de respuesta parecido en ambos casos)

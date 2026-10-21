@@ -1,25 +1,11 @@
 <?php
 
-// E6. Cacería de vulnerabilidades (busqueda.php)
-//
-// CÓDIGO VULNERABLE ORIGINAL:
-//   $q = $_GET['q'] ?? '';
-//   echo "<h1>Resultados para: $q</h1>";
-//   $res = $conexion->query("SELECT * FROM productos WHERE nombre LIKE '%$q%'");
-//
-// Vulnerabilidades:
-//   - XSS: $q se imprime sin escapar.
-//   - Inyección SQL: $q se concatena en la consulta.
-//   - Sin validación: acepta vacío, solo espacios y textos enormes.
-//
-// Este archivo es la VERSIÓN CORREGIDA. Usa una base de datos SQLite en memoria con unos productos de ejemplo.
-
 function e(string $texto): string
 {
     return htmlspecialchars($texto, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-// Base de datos de ejemplo (se crea en memoria en cada petición)
+// Base de datos de ejemplo
 $bd = new PDO('sqlite::memory:');
 $bd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $bd->exec("CREATE TABLE productos (id INTEGER PRIMARY KEY, nombre TEXT, precio REAL)");
@@ -28,10 +14,10 @@ $bd->exec("INSERT INTO productos (nombre, precio) VALUES
             ('Portátil 15 pulgadas', 649.00), ('Auriculares Bluetooth', 39.95), ('Cable HDMI', 7.50)");
 
 $maxLongitud = 50;
-$q           = '';
-$error       = '';
-$resultados  = [];
-$buscado     = false;
+$busqueda = '';
+$error = '';
+$resultados = [];
+$buscado = false;
 
 // 1) Validación de la entrada
 if (isset($_GET['q'])) {
@@ -39,13 +25,13 @@ if (isset($_GET['q'])) {
     if (!is_string($_GET['q'])) {
         $error = "La búsqueda no es válida.";
     } else {
-        $q = trim($_GET['q']);
+        $busqueda = trim($_GET['q']);
 
-        if ($q === '') {
+        if ($busqueda === '') {
             $error = "Introduce un término de búsqueda.";
-        } else if (mb_strlen($q) > $maxLongitud) {
+        } else if (mb_strlen($busqueda) > $maxLongitud) {
             $error = "La búsqueda no puede superar los $maxLongitud caracteres.";
-            $q = mb_substr($q, 0, $maxLongitud);   // solo para volver a mostrarlo sin llenar la página
+            $busqueda = mb_substr($busqueda, 0, $maxLongitud);   // solo para volver a mostrarlo sin llenar la página
         } else {
             $buscado = true;
         }
@@ -54,8 +40,8 @@ if (isset($_GET['q'])) {
 
 // 2) Consulta preparada
 if ($buscado) {
-    // Los comodines % y _ escritos por el usuario se tratan como texto normal
-    $patron = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $q) . '%';
+
+    $patron = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $busqueda) . '%';
 
     $consulta = $bd->prepare("SELECT nombre, precio FROM productos WHERE nombre LIKE :patron ESCAPE '\\'");
     $consulta->execute([':patron' => $patron]);
@@ -76,8 +62,7 @@ if ($buscado) {
 
     <form action="" method="GET">
         <label for="q">Buscar:</label>
-        <!-- 3) Escapado con ENT_QUOTES: una comilla doble ya no puede cerrar el atributo value -->
-        <input type="text" id="q" name="q" value="<?php echo e($q); ?>">
+        <input type="text" id="q" name="q" value="<?php echo e($busqueda); ?>">
         <button type="submit">Buscar</button>
     </form>
 
@@ -87,7 +72,7 @@ if ($buscado) {
 
     <?php } else if ($buscado) { ?>
 
-        <h2>Resultados para: <?php echo e($q); ?></h2>
+        <h2>Resultados para: <?php echo e($busqueda); ?></h2>
 
         <?php if (count($resultados) === 0) { ?>
             <p>No se han encontrado productos.</p>
@@ -115,26 +100,26 @@ if ($buscado) {
         <tr>
             <td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
             <td>Ejecución de JavaScript (XSS)</td>
-            <td>Se ejecuta el script y aparece la ventana con «1». La consulta no devuelve productos.</td>
-            <td>Se muestra como texto (&amp;lt;script&amp;gt;...). No se ejecuta nada y sale «No se han encontrado productos».</td>
+            <td>Se ejecuta el script y aparece la ventana con "1". La consulta no devuelve productos.</td>
+            <td>Se muestra como texto (&amp;lt;script&amp;gt;...). No se ejecuta nada y sale "No se han encontrado productos".</td>
         </tr>
         <tr>
             <td><code>&lt;img src=x onerror=alert(1)&gt;</code></td>
             <td>Ejecución de JavaScript (XSS)</td>
-            <td>La imagen no carga (src=x), salta el evento onerror y aparece la ventana con «1».</td>
+            <td>La imagen no carga (src=x), salta el evento onerror y aparece la ventana con "1".</td>
             <td>Se muestra como texto escapado. No se crea ninguna etiqueta img y no se ejecuta nada.</td>
         </tr>
         <tr>
             <td><code>' OR '1'='1</code></td>
             <td>Devuelve todos los productos (SQL injection)</td>
             <td>La consulta queda como <code>LIKE '%' OR '1'='1%'</code>; el <code>LIKE '%'</code> coincide con todo y se listan todos los productos.</td>
-            <td>Se busca el texto literal «' OR '1'='1»: no coincide con ningún producto y se muestra «No se han encontrado productos».</td>
+            <td>Se busca el texto literal "' OR '1'='1": no coincide con ningún producto y se muestra "No se han encontrado productos".</td>
         </tr>
         <tr>
             <td><code>'</code></td>
             <td>Error de SQL visible</td>
             <td>La comilla rompe la sintaxis (<code>LIKE '%'%'</code>) y aparece un error de SQL, que además revela detalles de la base de datos.</td>
-            <td>Se busca la comilla como texto normal: sin error y con «No se han encontrado productos».</td>
+            <td>Se busca la comilla como texto normal: sin error y con "No se han encontrado productos".</td>
         </tr>
         <tr>
             <td><code>"onmouseover="alert(1)</code></td>
@@ -146,13 +131,13 @@ if ($buscado) {
             <td>Solo espacios</td>
             <td>Búsqueda vacía</td>
             <td>Se lanza la consulta con <code>LIKE '%   %'</code> y se muestra un título vacío; resultados inútiles.</td>
-            <td>trim() lo deja vacío y se muestra «Introduce un término de búsqueda». No se consulta la base de datos.</td>
+            <td>trim() lo deja vacío y se muestra "Introduce un término de búsqueda". No se consulta la base de datos.</td>
         </tr>
         <tr>
-            <td>10 000 letras «a»</td>
+            <td>10 000 letras "a"</td>
             <td>Entrada excesiva</td>
             <td>La página repite las 10 000 letras en el título y se lanza una consulta enorme: carga innecesaria para el servidor.</td>
-            <td>Se rechaza con «La búsqueda no puede superar los 50 caracteres». No se consulta la base de datos.</td>
+            <td>Se rechaza con "La búsqueda no puede superar los 50 caracteres". No se consulta la base de datos.</td>
         </tr>
     </table>
 
