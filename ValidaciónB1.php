@@ -19,8 +19,8 @@ $pruebas = [
     '12345678Z' => true,   // válido
     '12345678A' => false,  // letra incorrecta
     '12345678z' => true,   // minúscula: se normaliza
-    '1234567Z'  => false,  // solo 7 números
-    '12345678'  => false,  // falta la letra
+    '1234567Z' => false,  // solo 7 números
+    '12345678' => false,  // falta la letra
     'ABCDEFGHZ' => false   // no son números
 ];
 
